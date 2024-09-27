@@ -1,102 +1,105 @@
-### Lesson 11: Java I/O Streams - Handling Input and Output Operations
+# Lesson 11: User Input and Command-Line Interaction
 
-In this lesson, you'll learn about **Java I/O Streams**, which allow you to read from and write to files, enabling your To-Do App to persist data even after the application is closed.
+In this lesson, we will explore how to handle user input in Java applications, particularly through the command line. We will see how to use the `Scanner` class to read user input and implement command-line interaction in our To-Do List Manager.
 
----
+## Objectives
+- Understand how to use the `Scanner` class for input.
+- Learn how to implement a command-line interface (CLI) for the To-Do List Manager.
+- Manage user commands and interactions effectively.
 
-### 📝 Key Concepts:
-- **InputStream and OutputStream**: Classes for reading and writing bytes.
-- **Reader and Writer**: Classes for reading and writing character data.
-- **File I/O**: Using Java's `File`, `FileReader`, `FileWriter`, `BufferedReader`, and `BufferedWriter` for file operations.
+## Using the Scanner Class
+The `Scanner` class is part of the `java.util` package and is used to read input from various sources, including keyboard input. To use `Scanner`, you need to create an instance of it, typically by passing `System.in` to its constructor.
 
----
-
-### What You'll Learn:
-- How to read from a file using `BufferedReader`.
-- How to write to a file using `BufferedWriter`.
-- Handling exceptions during I/O operations.
-
----
-
-### Code Examples:
-
-1. **Writing to a File:**
-
+### Example
 ```java
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.Scanner;
 
-public class FileWriteExample {
+public class UserInputExample {
     public static void main(String[] args) {
-        String filename = "tasks.txt";
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            writer.write("Task 1\n");
-            writer.write("Task 2\n");
-            writer.write("Task 3\n");
-            System.out.println("Tasks saved to " + filename);
-        } catch (IOException e) {
-            System.out.println("Error writing to file: " + e.getMessage());
-        }
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter your name:");
+        String name = scanner.nextLine();
+        System.out.println("Hello, " + name + "!");
+        scanner.close();
     }
 }
 ```
 
-2. **Reading from a File:**
+## Implementing Command-Line Interaction in To-Do List Manager
+We will modify the `Main` class to include a simple command-line interface that allows users to interact with the To-Do List Manager.
+
+### Updated `Main.java`
+Here’s an example of how your `Main.java` file might look with user input handling:
 
 ```java
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.Scanner;
 
-public class FileReadExample {
+public class Main {
     public static void main(String[] args) {
-        String filename = "tasks.txt";
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println("Read task: " + line);
+        Scanner scanner = new Scanner(System.in);
+        TodoListManager<String> toDoListManager = new TodoListManager<>();
+        String command;
+
+        do {
+            System.out.println("\nEnter a command (add/view/remove/complete/save/load/exit):");
+            command = scanner.nextLine();
+
+            switch (command) {
+                case "add":
+                    System.out.println("Enter the task:");
+                    String task = scanner.nextLine();
+                    toDoListManager.addTask(task);
+                    break;
+                case "view":
+                    toDoListManager.viewTasks();
+                    break;
+                case "remove":
+                    System.out.println("Enter the task number to remove:");
+                    int taskNumber = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    toDoListManager.removeTask(taskNumber);
+                    break;
+                case "complete":
+                    System.out.println("Enter the task number to complete:");
+                    int completeTaskNumber = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    toDoListManager.completeTask(completeTaskNumber);
+                    break;
+                case "save":
+                    System.out.println("Enter the filename to save tasks:");
+                    String saveFilename = scanner.nextLine();
+                    toDoListManager.saveTasksToFile(saveFilename);
+                    break;
+                case "load":
+                    System.out.println("Enter the filename to load tasks:");
+                    String loadFilename = scanner.nextLine();
+                    toDoListManager.loadTasksFromFile(loadFilename);
+                    break;
+                case "exit":
+                    System.out.println("Exiting the application.");
+                    break;
+                default:
+                    System.out.println("Invalid command.");
             }
-        } catch (IOException e) {
-            System.out.println("Error reading from file: " + e.getMessage());
-        }
+        } while (!command.equals("exit"));
+
+        scanner.close();
     }
 }
 ```
 
-3. **Integrating File I/O into Your To-Do App**:
-   - Update your `TodoListManager` to save tasks to a file when using the `saveTasksToFile` method and load tasks from a file in the `loadTasksFromFile` method.
+## Managing User Commands
+In the updated `Main.java`, users can enter commands to manage their to-do list. This includes adding tasks, viewing tasks, removing tasks, completing tasks, saving tasks to a file, loading tasks from a file, and exiting the application.
 
-### Updated `loadTasksFromFile` Method Example:
+### Tips for Command Management
+- Always validate user input to avoid errors (e.g., checking if task numbers are within the valid range).
+- Use clear and concise prompts to guide users on what inputs are expected.
 
-```java
-public void loadTasksFromFile(String filename) {
-    try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-        String task;
-        while ((task = reader.readLine()) != null) {
-            addTask((T) task);  // Cast to generic type T
-            System.out.println("Task loaded: " + task);
-        }
-    } catch (IOException e) {
-        System.out.println("Error loading tasks: " + e.getMessage());
-    }
-}
-```
+## Conclusion
+In this lesson, you learned how to handle user input in Java using the `Scanner` class and implemented a command-line interface for your To-Do List Manager. User interaction is crucial for creating an engaging application experience.
 
----
+### Next Steps
+- Explore how to enhance the user experience, such as adding error messages for invalid inputs or improving the command handling logic.
+- Consider implementing additional features like task prioritization or due dates for tasks.
 
-### 🚀 Your Task
-
-1. **Implement File I/O**:
-   - Integrate the provided file reading and writing examples into your `TodoListManager` class.
-   - Ensure that your application can save and load tasks from a specified file.
-
-2. **Testing**:
-   - Test your application by adding tasks, saving them to a file, and then loading them to see if they appear correctly.
-
----
-
-### Next Lesson
-In **Lesson 12**, we’ll cover the **Final Enhancements** for your To-Do App, where you'll polish the application and add any additional features or improvements you want.
-
----
+Happy coding!

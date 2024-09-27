@@ -1,154 +1,82 @@
-### Lesson 10: Java Threads and Multithreading - Running Tasks Concurrently
+# Lesson 10: Unit Testing with JUnit
 
-In this lesson, you'll explore **multithreading** in Java, which allows you to run multiple tasks simultaneously. Multithreading is useful for making applications more efficient and responsive, especially for tasks that can run independently.
+In this lesson, we will explore the importance of unit testing in software development and how to use JUnit, a popular testing framework for Java, to write and run tests for our To-Do List Manager.
 
----
+## Objectives
+- Understand the concept of unit testing and its benefits.
+- Learn how to set up JUnit in your project.
+- Write and run unit tests for the `TodoListManager` class.
 
-### 📝 Key Concepts:
-- **Thread**: A unit of execution within a program.
-- **Runnable Interface**: A functional interface used to define the task a thread should execute.
-- **Thread Class**: Represents a thread in Java and provides methods to manage it.
-- **Synchronization**: A mechanism to control the access of multiple threads to shared resources.
+## What is Unit Testing?
+Unit testing is a software testing technique where individual units or components of a software application are tested in isolation to ensure that they are functioning correctly. The main benefits of unit testing include:
 
----
+- **Early Bug Detection**: Finding and fixing bugs at an early stage of development.
+- **Improved Code Quality**: Encourages developers to write cleaner and more modular code.
+- **Facilitates Refactoring**: Ensures that changes or refactorings do not break existing functionality.
 
-### What You'll Learn:
-- How to create and manage threads in Java.
-- How to use the `Runnable` interface to define a task for a thread.
-- Synchronization to avoid thread interference in shared resources.
+## Setting Up JUnit
+To use JUnit, you need to add it as a dependency in your project. If you're using Maven, you can add the following to your `pom.xml`:
 
----
+```xml
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>4.13.2</version>
+    <scope>test</scope>
+</dependency>
+```
 
-### Code Examples:
+If you're not using Maven, you can download the JUnit jar file and add it to your project's build path.
 
-1. **Creating and Starting Threads:**
+## Writing Unit Tests
+Now, let's write some unit tests for our `TodoListManager` class. Create a new file named `TodoListManagerTest.java` in your test directory.
+
+### Example Test Cases
+Here are some example test cases for the `TodoListManager`:
 
 ```java
-public class SimpleThreadExample {
-    public static void main(String[] args) {
-        // Create two threads
-        Thread thread1 = new Thread(new Task("Task 1"));
-        Thread thread2 = new Thread(new Task("Task 2"));
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-        // Start the threads
-        thread1.start();
-        thread2.start();
-    }
-}
+public class TodoListManagerTest {
+    private TodoListManager<String> manager;
 
-class Task implements Runnable {
-    private String taskName;
-
-    public Task(String taskName) {
-        this.taskName = taskName;
+    @Before
+    public void setUp() {
+        manager = new TodoListManager<>();
     }
 
-    @Override
-    public void run() {
-        for (int i = 1; i <= 5; i++) {
-            System.out.println(taskName + " - Count: " + i);
-            try {
-                Thread.sleep(1000);  // Pause the thread for 1 second
-            } catch (InterruptedException e) {
-                System.out.println("Thread interrupted.");
-            }
-        }
+    @Test
+    public void testAddTask() {
+        manager.addTask("Task 1");
+        assertEquals(1, manager.getTasks().size()); // Check if task is added
+    }
+
+    @Test
+    public void testRemoveTask() {
+        manager.addTask("Task 1");
+        manager.removeTask(1);
+        assertEquals(0, manager.getTasks().size()); // Check if task is removed
+    }
+
+    @Test
+    public void testCompleteTask() {
+        manager.addTask("Task 1");
+        manager.completeTask(1);
+        assertEquals(0, manager.getTasks().size()); // Check if task is completed and removed
     }
 }
 ```
 
-2. **Thread Synchronization:**
+### Running Your Tests
+You can run your JUnit tests using your IDE's built-in support for running tests or by using a build tool like Maven or Gradle. In most IDEs, right-click on the test file and select "Run".
 
-```java
-public class SynchronizedCounterExample {
-    public static void main(String[] args) {
-        Counter counter = new Counter();
+## Conclusion
+In this lesson, you learned the importance of unit testing and how to use JUnit to write and run tests for your Java applications. Writing tests helps ensure your code works as expected and improves code quality.
 
-        Thread thread1 = new Thread(() -> {
-            for (int i = 0; i < 1000; i++) {
-                counter.increment();
-            }
-        });
+### Next Steps
+- Explore more advanced features of JUnit, such as assertions, test suites, and parameterized tests.
+- Consider using other testing frameworks like Mockito for mocking dependencies.
 
-        Thread thread2 = new Thread(() -> {
-            for (int i = 0; i < 1000; i++) {
-                counter.increment();
-            }
-        });
-
-        thread1.start();
-        thread2.start();
-
-        try {
-            thread1.join();  // Wait for thread1 to finish
-            thread2.join();  // Wait for thread2 to finish
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Final Counter Value: " + counter.getValue());
-    }
-}
-
-class Counter {
-    private int value = 0;
-
-    // Synchronized method to ensure only one thread can modify value at a time
-    public synchronized void increment() {
-        value++;
-    }
-
-    public int getValue() {
-        return value;
-    }
-}
-```
-
-3. **Creating Threads by Extending the `Thread` Class:**
-
-```java
-public class ThreadExample extends Thread {
-    private String threadName;
-
-    public ThreadExample(String threadName) {
-        this.threadName = threadName;
-    }
-
-    public void run() {
-        for (int i = 1; i <= 3; i++) {
-            System.out.println(threadName + " - Count: " + i);
-            try {
-                Thread.sleep(500);  // Pause the thread for 0.5 seconds
-            } catch (InterruptedException e) {
-                System.out.println(threadName + " interrupted.");
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        ThreadExample thread1 = new ThreadExample("Thread 1");
-        ThreadExample thread2 = new ThreadExample("Thread 2");
-
-        thread1.start();
-        thread2.start();
-    }
-}
-```
-
----
-
-### 🚀 Your Task
-
-1. **Multithreading in To-Do App**:
-   - Enhance your `TodoListManager` to periodically auto-save tasks in the background using a separate thread.
-   - You can use the `Timer` or `ScheduledExecutorService` for periodic tasks.
-
-2. **Synchronization**:
-   - Ensure that if multiple threads are modifying the task list at the same time (e.g., one adding tasks while another is saving), no conflicts or data corruption occur.
-
----
-
-### Next Lesson
-In **Lesson 11**, we’ll explore **Java I/O Streams** and how to efficiently handle input/output operations in Java.
-
----
+Happy coding!

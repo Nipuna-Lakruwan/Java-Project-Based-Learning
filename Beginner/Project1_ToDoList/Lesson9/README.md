@@ -1,106 +1,72 @@
-### Lesson 9: Java Exception Handling - Writing Robust Code
+# Lesson 9: File I/O - Saving and Loading Tasks
 
-In this lesson, you'll learn about **exception handling** in Java. Exception handling helps you write code that can handle errors gracefully without crashing the program.
+In this lesson, we will explore File Input/Output (I/O) in Java, specifically how to save and load tasks in our To-Do List Manager. File I/O allows us to persist data even after the application is closed, enhancing the functionality of our application.
 
----
+## Objectives
+- Understand the basics of file handling in Java.
+- Learn to save tasks to a file.
+- Load tasks from a file into the application.
 
-### 📝 Key Concepts:
-- **Exception**: An event that disrupts the normal flow of a program’s instructions.
-- **try-catch block**: The structure used in Java to handle exceptions.
-- **throw**: Used to manually trigger an exception.
-- **finally**: Code block that will always execute after try-catch, whether an exception occurs or not.
+## Understanding File I/O in Java
+Java provides several classes for file handling, primarily found in the `java.io` package. The two main classes we will focus on are:
 
----
+1. **FileWriter**: Used for writing character files.
+2. **BufferedReader**: Used for reading text from a character-input stream, buffering characters for efficient reading.
 
-### What You'll Learn:
-- How to handle errors using `try-catch` blocks.
-- How to throw exceptions to indicate error conditions.
-- The importance of the `finally` block in resource management.
-
----
-
-### Code Examples:
-
-1. **Basic try-catch block:**
+### Writing to a File
+To save tasks, we will use `FileWriter`. Here’s how we can implement the `saveTasksToFile` method in our `TodoListManager` class.
 
 ```java
-public class ExceptionHandlingExample {
-    public static void main(String[] args) {
-        try {
-            int result = divide(10, 0);
-            System.out.println("Result: " + result);
-        } catch (ArithmeticException e) {
-            System.out.println("Error: " + e.getMessage());
+public void saveTasksToFile(String filename) {
+    try (FileWriter writer = new FileWriter(filename)) {
+        for (T task : tasks) {
+            writer.write(task.toString() + "\n");
         }
-    }
-
-    public static int divide(int a, int b) {
-        return a / b;  // This will cause ArithmeticException when b is 0
+        System.out.println("Tasks saved to " + filename);
+    } catch (IOException e) {
+        System.out.println("Error saving tasks: " + e.getMessage());
     }
 }
 ```
 
-2. **Using `throw` to manually raise an exception:**
+### Reading from a File
+To load tasks, we will use `BufferedReader` to read the file line by line and add each task to our task list.
 
 ```java
-public class CustomExceptionExample {
-    public static void main(String[] args) {
-        try {
-            checkAge(15);  // This will throw an exception
-        } catch (IllegalArgumentException e) {
-            System.out.println("Exception caught: " + e.getMessage());
+public void loadTasksFromFile(String filename) {
+    try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+        String task;
+        while ((task = reader.readLine()) != null) {
+            addTask((T) task); // Add each task to the list
+            System.out.println("Task loaded: " + task);
         }
-    }
-
-    public static void checkAge(int age) {
-        if (age < 18) {
-            throw new IllegalArgumentException("Age must be 18 or older.");
-        }
-        System.out.println("Age is valid.");
+    } catch (IOException e) {
+        System.out.println("Error loading tasks: " + e.getMessage());
     }
 }
 ```
 
-3. **finally block:**
+### Example Implementation
+Here is how you can implement the saving and loading functionality in the `Main` class:
 
 ```java
-import java.io.*;
-
-public class FileHandlingWithFinally {
-    public static void main(String[] args) {
-        FileReader file = null;
-        try {
-            file = new FileReader("example.txt");
-            BufferedReader reader = new BufferedReader(file);
-            System.out.println(reader.readLine());
-        } catch (IOException e) {
-            System.out.println("File not found or error reading the file.");
-        } finally {
-            try {
-                if (file != null) {
-                    file.close();
-                }
-            } catch (IOException e) {
-                System.out.println("Error closing the file.");
-            }
-        }
-    }
-}
+case "save":
+    System.out.println("Enter the filename to save tasks:");
+    String saveFilename = scanner.nextLine();
+    toDoListManager.saveTasksToFile(saveFilename);
+    break;
+case "load":
+    System.out.println("Enter the filename to load tasks:");
+    String loadFilename = scanner.nextLine();
+    toDoListManager.loadTasksFromFile(loadFilename);
+    break;
 ```
 
----
+## Conclusion
+In this lesson, you learned about file handling in Java, specifically how to save and load tasks in your To-Do List Manager. You now have the capability to persist user data, which improves the overall user experience of your application.
 
-### 🚀 Your Task
+### Next Steps
+- Explore handling exceptions specifically related to file operations.
+- Consider adding functionality to check if a file exists before loading tasks to avoid errors.
 
-1. Modify your `TodoListManager` to handle potential errors like:
-   - **FileNotFoundException**: Handle cases where the file to load tasks from doesn't exist.
-   - **IndexOutOfBoundsException**: Handle cases where an invalid task number is provided for removal or completion.
-
-2. Implement a custom exception class, **InvalidTaskException**, that gets thrown when trying to remove or complete a task that doesn’t exist.
-
----
-
-### Next Lesson
-In **Lesson 10**, we’ll dive into **Java Threads and Multithreading**, where you’ll learn how to run tasks concurrently.
-
----
+Happy coding!

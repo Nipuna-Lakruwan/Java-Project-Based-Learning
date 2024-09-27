@@ -1,81 +1,126 @@
-### Lesson 8: Java Maps - Associating Keys with Values
+# Lesson 8: Exception Handling in Java
 
-In this lesson, you’ll learn how to use the `Map` interface in Java. Maps store key-value pairs, making them ideal for situations where you need to look up values based on a unique key.
+In this lesson, we will explore the concept of exception handling in Java. Exception handling is a powerful mechanism that allows developers to manage runtime errors, ensuring the normal flow of the application is maintained even when unexpected events occur.
 
----
+## Objectives
+- Understand what exceptions are and how they differ from errors.
+- Learn about the hierarchy of exceptions in Java.
+- Implement try-catch blocks to handle exceptions.
+- Create custom exceptions for specific scenarios.
 
-### 📝 Key Concepts:
-- **Map**: A collection that associates keys with values. Each key is unique, and a single key maps to exactly one value.
-- **HashMap**: A common implementation of `Map` that stores key-value pairs without a specific order.
-- **TreeMap**: Another implementation of `Map` that stores key-value pairs in a sorted order based on the keys.
+## Understanding Exceptions
+An exception is an event that disrupts the normal flow of the program. In Java, exceptions are objects that represent these errors. The Java Exception hierarchy is divided into two main categories:
 
----
+1. **Checked Exceptions**: These exceptions are checked at compile-time (e.g., `IOException`, `SQLException`).
+2. **Unchecked Exceptions**: These exceptions are checked at runtime (e.g., `NullPointerException`, `ArrayIndexOutOfBoundsException`).
 
-### What You'll Learn:
-- How to create and use `HashMap` and `TreeMap`.
-- Basic operations like adding, removing, and searching for key-value pairs.
+### Exception Hierarchy
+- **Throwable**: The superclass of all errors and exceptions.
+  - **Error**: Represents serious problems that a reasonable application should not catch (e.g., `OutOfMemoryError`).
+  - **Exception**: The superclass for all exceptions that can be caught and handled.
 
----
+## Implementing Exception Handling
 
-### Code Examples:
-
-1. **Using HashMap:**
+### Step 1: Using Try-Catch Blocks
+The basic syntax for handling exceptions is to use a `try` block followed by one or more `catch` blocks.
 
 ```java
-import java.util.HashMap;
-import java.util.Map;
+try {
+    // Code that may throw an exception
+} catch (ExceptionType e) {
+    // Code to handle the exception
+}
+```
 
-public class HashMapExample {
+### Example: Handling InputMismatchException
+In our To-Do List Manager, we can modify the `Main` class to handle input exceptions when reading user input.
+
+```java
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class Main {
     public static void main(String[] args) {
-        Map<String, Integer> tasks = new HashMap<>();
-        tasks.put("Complete lesson 8", 1);
-        tasks.put("Learn Java Maps", 2);
+        Scanner scanner = new Scanner(System.in);
+        TodoListManager<String> toDoListManager = new TodoListManager<>();  // Managing String tasks
+        String command;
 
-        System.out.println("Task: " + tasks.get("Complete lesson 8"));
-        
-        tasks.remove("Learn Java Maps"); // Removes the task
-        
-        System.out.println("All tasks:");
-        for (String task : tasks.keySet()) {
-            System.out.println(task + ": Priority " + tasks.get(task));
-        }
+        do {
+            System.out.println("\nEnter a command (add/view/remove/complete/exit):");
+            command = scanner.nextLine();
+
+            switch (command) {
+                case "add":
+                    System.out.println("Enter the task:");
+                    String task = scanner.nextLine();
+                    toDoListManager.addTask(task);
+                    break;
+                case "view":
+                    toDoListManager.viewTasks();
+                    break;
+                case "remove":
+                    try {
+                        System.out.println("Enter the task number to remove:");
+                        int removeTaskNumber = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline
+                        toDoListManager.removeTask(removeTaskNumber);
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input. Please enter a number.");
+                        scanner.nextLine(); // Clear the invalid input
+                    }
+                    break;
+                case "complete":
+                    try {
+                        System.out.println("Enter the task number to complete:");
+                        int completeTaskNumber = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline
+                        toDoListManager.completeTask(completeTaskNumber);
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input. Please enter a number.");
+                        scanner.nextLine(); // Clear the invalid input
+                    }
+                    break;
+                case "exit":
+                    System.out.println("Exiting the application.");
+                    break;
+                default:
+                    System.out.println("Invalid command.");
+            }
+        } while (!command.equals("exit"));
+
+        scanner.close();
     }
 }
 ```
 
-2. **Using TreeMap:**
+### Step 2: Creating Custom Exceptions
+You can create custom exceptions by extending the `Exception` class.
 
 ```java
-import java.util.Map;
-import java.util.TreeMap;
-
-public class TreeMapExample {
-    public static void main(String[] args) {
-        Map<String, Integer> tasks = new TreeMap<>();
-        tasks.put("Finish Java project", 1);
-        tasks.put("Attend meeting", 3);
-        tasks.put("Read documentation", 2);
-        
-        for (String task : tasks.keySet()) {
-            System.out.println(task + ": Priority " + tasks.get(task));
-        }
+public class TaskNotFoundException extends Exception {
+    public TaskNotFoundException(String message) {
+        super(message);
     }
 }
 ```
 
----
+You can then use this custom exception in your methods, for example, when trying to remove a task that does not exist.
 
-### 🚀 Your Task
+```java
+public void removeTask(int index) throws TaskNotFoundException {
+    if (index < 1 || index > tasks.size()) {
+        throw new TaskNotFoundException("Invalid task number.");
+    }
+    System.out.println("Task removed: " + tasks.get(index - 1));
+    tasks.remove(index - 1);
+}
+```
 
-1. Create a **TaskPriorityManager** class that uses a `HashMap` to associate tasks with their priority.
-   - Add tasks with different priorities.
-   - Implement methods to change task priority and display all tasks in order.
+## Conclusion
+In this lesson, you learned about exception handling in Java, including the hierarchy of exceptions and how to implement try-catch blocks. You also explored creating custom exceptions to handle specific scenarios in your To-Do List Manager.
 
-2. Extend your `TodoListManager` to allow setting and viewing task priorities using a `TreeMap`.
+### Next Steps
+- Implement more complex exception handling for file operations (e.g., when saving or loading tasks).
+- Explore the `finally` block to execute code regardless of whether an exception was thrown.
 
----
-
-### Next Lesson
-In **Lesson 9**, we will explore **Java Exception Handling** and learn how to write robust code that gracefully handles errors.
-
----
+Happy coding!

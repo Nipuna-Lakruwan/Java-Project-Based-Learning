@@ -1,36 +1,40 @@
-### Lesson 7: Java Collections - Managing To-Do Lists Efficiently
+# Lesson 7: Java Collections - Managing To-Do Lists Efficiently
 
-#### 1. Introduction
+In this lesson, we will delve into Java Collections, a framework that provides a set of classes and interfaces for storing and manipulating groups of data. We will use collections to enhance the functionality of our To-Do List Manager, allowing us to manage tasks more efficiently.
 
-In this lesson, we will dive deeper into **Java Collections** and explore how they can help us manage tasks in a to-do list more efficiently. We’ll look at how to store, retrieve, and manipulate collections of tasks using the `List`, `Set`, and `Map` interfaces.
+## Objectives
+- Understand the Java Collections framework.
+- Learn about different collection types and their use cases.
+- Implement a more efficient To-Do List Manager using collections.
 
-#### 2. Key Concepts
+## Overview of Java Collections
+Java Collections provide various interfaces (like `List`, `Set`, and `Map`) and classes (like `ArrayList`, `HashSet`, and `HashMap`) to handle groups of objects. Here are some key collection types:
 
-- **List**: An ordered collection (also known as a sequence) that can contain duplicate elements. Example: `ArrayList`, `LinkedList`.
-- **Set**: A collection that cannot contain duplicate elements. Example: `HashSet`, `TreeSet`.
-- **Map**: An object that maps keys to values. A `Map` cannot contain duplicate keys. Example: `HashMap`, `TreeMap`.
+1. **List**: An ordered collection that allows duplicates (e.g., `ArrayList`, `LinkedList`).
+2. **Set**: A collection that does not allow duplicates (e.g., `HashSet`, `TreeSet`).
+3. **Map**: A collection of key-value pairs (e.g., `HashMap`, `TreeMap`).
 
-#### 3. Project Overview
+### Choosing the Right Collection
+- Use `ArrayList` when you need a resizable array for storing elements.
+- Use `HashSet` when you want to ensure that no duplicates are present.
+- Use `HashMap` for fast lookups based on keys.
 
-We will extend the **To-Do List Manager** application to manage tasks using various collections, providing more flexibility and efficiency in how we store and access tasks.
+## Enhancing the To-Do List Manager
 
-#### 4. Code Walkthrough
-
-### 4.1. Using `ArrayList` to Manage Tasks
-
-We'll refactor the `ToDoListManager` to use an `ArrayList` for storing tasks, which allows efficient random access to tasks and maintains the insertion order.
+### Step 1: Updating the TodoListManager
+We will modify our `TodoListManager` to use an `ArrayList` for task management and add functionality for removing and completing tasks.
 
 ```java
 import java.util.ArrayList;
 
-public class ToDoListManager {
-    private ArrayList<String> tasks;
+public class TodoListManager<T> {
+    private ArrayList<T> tasks;
 
-    public ToDoListManager() {
+    public TodoListManager() {
         tasks = new ArrayList<>();
     }
 
-    public void addTask(String task) {
+    public void addTask(T task) {
         tasks.add(task);
         System.out.println("Task added: " + task);
     }
@@ -53,114 +57,84 @@ public class ToDoListManager {
             System.out.println("Invalid task number.");
         }
     }
+
+    public void completeTask(int index) {
+        if (index >= 1 && index <= tasks.size()) {
+            System.out.println("Task completed: " + tasks.get(index - 1));
+            tasks.remove(index - 1);
+        } else {
+            System.out.println("Invalid task number.");
+        }
+    }
 }
 ```
 
-### 4.2. Using `HashSet` for Unique Tasks
-
-If you want to ensure no duplicate tasks are added to the list, you can switch to a `HashSet`. This will guarantee that each task is unique.
+### Step 2: Updating the Main Class
+Next, we will add options for removing and completing tasks in the `Main` class.
 
 ```java
-import java.util.HashSet;
+import java.util.Scanner;
 
-public class ToDoListManager {
-    private HashSet<String> tasks;
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        TodoListManager<String> toDoListManager = new TodoListManager<>();  // Managing String tasks
+        String command;
 
-    public ToDoListManager() {
-        tasks = new HashSet<>();
-    }
+        do {
+            System.out.println("\nEnter a command (add/view/remove/complete/exit):");
+            command = scanner.nextLine();
 
-    public void addTask(String task) {
-        if (tasks.add(task)) {
-            System.out.println("Task added: " + task);
-        } else {
-            System.out.println("Task already exists: " + task);
-        }
-    }
-
-    public void viewTasks() {
-        if (tasks.isEmpty()) {
-            System.out.println("No tasks in the list.");
-        } else {
-            int i = 1;
-            for (String task : tasks) {
-                System.out.println(i + ". " + task);
-                i++;
+            switch (command) {
+                case "add":
+                    System.out.println("Enter the task:");
+                    String task = scanner.nextLine();
+                    toDoListManager.addTask(task);
+                    break;
+                case "view":
+                    toDoListManager.viewTasks();
+                    break;
+                case "remove":
+                    System.out.println("Enter the task number to remove:");
+                    int removeTaskNumber = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    toDoListManager.removeTask(removeTaskNumber);
+                    break;
+                case "complete":
+                    System.out.println("Enter the task number to complete:");
+                    int completeTaskNumber = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    toDoListManager.completeTask(completeTaskNumber);
+                    break;
+                case "exit":
+                    System.out.println("Exiting the application.");
+                    break;
+                default:
+                    System.out.println("Invalid command.");
             }
-        }
-    }
+        } while (!command.equals("exit"));
 
-    public void removeTask(String task) {
-        if (tasks.remove(task)) {
-            System.out.println("Task removed: " + task);
-        } else {
-            System.out.println("Task not found: " + task);
-        }
+        scanner.close();
     }
 }
 ```
 
-### 4.3. Using `HashMap` for Categorized Tasks
+### Step 3: Compiling and Running the Program
+1. Compile the program:
+   ```
+   javac Main.java TodoListManager.java
+   ```
 
-In more complex applications, you might want to categorize tasks. Using a `HashMap`, you can associate tasks with categories (like "Work", "Personal", "Shopping").
+2. Run the program:
+   ```
+   java Main
+   ```
 
-```java
-import java.util.HashMap;
-import java.util.ArrayList;
+## Conclusion
+In this lesson, you learned about the Java Collections framework and how to implement an efficient To-Do List Manager using an `ArrayList`. You also enhanced the functionality by adding methods for removing and completing tasks.
 
-public class ToDoListManager {
-    private HashMap<String, ArrayList<String>> tasks;
+### Next Steps
+- Explore additional collections like `HashSet` and `HashMap` for more complex task management scenarios.
+- Implement sorting or prioritization features for tasks.
 
-    public ToDoListManager() {
-        tasks = new HashMap<>();
-    }
-
-    public void addTask(String category, String task) {
-        tasks.computeIfAbsent(category, k -> new ArrayList<>()).add(task);
-        System.out.println("Task added to " + category + ": " + task);
-    }
-
-    public void viewTasks(String category) {
-        if (tasks.containsKey(category)) {
-            ArrayList<String> taskList = tasks.get(category);
-            if (taskList.isEmpty()) {
-                System.out.println("No tasks in the " + category + " category.");
-            } else {
-                for (int i = 0; i < taskList.size(); i++) {
-                    System.out.println((i + 1) + ". " + taskList.get(i));
-                }
-            }
-        } else {
-            System.out.println("No tasks found for the category: " + category);
-        }
-    }
-
-    public void removeTask(String category, String task) {
-        if (tasks.containsKey(category) && tasks.get(category).remove(task)) {
-            System.out.println("Task removed from " + category + ": " + task);
-        } else {
-            System.out.println("Task not found in the category: " + category);
-        }
-    }
-}
-```
-
-### 5. Code Organization
-
-- **ToDoListManager.java**: Now uses collections (`ArrayList`, `HashSet`, or `HashMap`) to manage tasks.
-- **ToDoApp.java**: Handles user input and interacts with `ToDoListManager` based on the collection type used.
-
-### 6. Challenges
-
-Try these challenges to further explore collections:
-- Implement sorting for tasks within a category using a `TreeSet` or `Collections.sort()`.
-- Extend the `ToDoListManager` to support searching for tasks using a specific keyword or category.
-- Implement a **priority queue** of tasks, where tasks with higher priorities get completed first.
-
-### 7. Summary
-
-In this lesson, you learned how to use Java Collections (`List`, `Set`, `Map`) to efficiently manage tasks in the to-do list application. Collections provide powerful tools for storing and manipulating data and can greatly enhance the flexibility and performance of your applications.
-
-Next, we'll explore **Exception Handling** to make our applications more robust.
-
-Happy coding! 🚀
+Happy coding!
