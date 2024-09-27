@@ -1,0 +1,19 @@
+<project name="ToDoListManager" default="jar" basedir=".">
+    <target name="clean">
+        <delete dir="dist"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="bin"/>
+        <javac srcdir="src" destdir="bin"/>
+    </target>
+
+    <target name="jar" depends="clean, compile">
+        <mkdir dir="dist"/>
+        <jar destfile="dist/ToDoListManager.jar" basedir="bin">
+            <manifest>
+                <attribute name="Main-Class" value="Main"/>
+            </manifest>
+        </jar>
+    </target>
+</project>
