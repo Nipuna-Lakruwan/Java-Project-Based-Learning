@@ -1,3 +1,4 @@
+
 /*
 1. EncapsulationExample.java
 This file demonstrates the concept of encapsulation by creating a `BankAccount` class with private variables and public methods.
