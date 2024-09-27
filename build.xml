@@ -1,16 +1,51 @@
-<project name="JavaProject" default="compile" basedir=".">
-    <property name="src.dir" value="src"/>
-    <property name="build.dir" value="build"/>
-    
-    <target name="init">
-        <mkdir dir="${build.dir}"/>
-    </target>
-    
-    <target name="compile" depends="init">
-        <javac srcdir="${src.dir}" destdir="${build.dir}"/>
-    </target>
-    
-    <target name="clean">
-        <delete dir="${build.dir}"/>
-    </target>
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ToDoListApp" default="run" basedir=".">
+  
+  <!-- Define variables -->
+  <property name="src.dir" location="src"/>
+  <property name="build.dir" location="build"/>
+  <property name="dist.dir" location="dist"/>
+  <property name="main.class" value="Main"/> 
+
+  <!-- Target to clean the build and dist directories -->
+  <target name="clean">
+    <echo>Cleaning build and dist directories...</echo>
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
+  </target>
+
+  <!-- Target to compile the source code -->
+  <target name="compile" depends="clean">
+    <mkdir dir="${build.dir}"/>
+    <javac srcdir="${src.dir}" destdir="${build.dir}">
+      <include name="**/*.java"/>
+    </javac>
+    <echo>Compilation complete.</echo>
+  </target>
+
+  <!-- Target to create a JAR file -->
+  <target name="jar" depends="compile">
+    <mkdir dir="${dist.dir}"/>
+    <jar destfile="${dist.dir}/ToDoListApp.jar" basedir="${build.dir}">
+      <manifest>
+        <attribute name="Main-Class" value="${main.class}"/>
+      </manifest>
+    </jar>
+    <echo>JAR file created in ${dist.dir}/ToDoListApp.jar</echo>
+  </target>
+
+  <!-- Target to run the application -->
+  <target name="run" depends="compile">
+    <java classname="${main.class}" fork="true">
+      <classpath>
+        <pathelement path="${build.dir}"/>
+      </classpath>
+    </java>
+  </target>
+
+  <!-- Target to clean, compile, create JAR, and run the application -->
+  <target name="full-build" depends="jar,run">
+    <echo>Full build completed: compiled, packaged, and running the application.</echo>
+  </target>
+
 </project>
