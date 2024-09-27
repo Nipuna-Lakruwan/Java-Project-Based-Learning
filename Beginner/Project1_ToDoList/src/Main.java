@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        TodoList todoList = new TodoList();
+        TodoListManager todoListManager = new TodoListManager();
         String command = "";
 
         System.out.println("Welcome to the To-Do List Application!");
@@ -17,32 +17,32 @@ public class Main {
                     case "add":
                         System.out.println("Enter the task:");
                         String task = scanner.nextLine();
-                        todoList.addTask(task);
+                        todoListManager.addTask(task);
                         break;
                     case "view":
-                        todoList.viewTasks();
+                        todoListManager.viewTasks();
                         break;
                     case "remove":
                         System.out.println("Enter the task number to remove:");
                         int taskNumber = scanner.nextInt();
                         scanner.nextLine();
-                        todoList.removeTask(taskNumber);
+                        todoListManager.removeTask(taskNumber);
                         break;
                     case "complete":
                         System.out.println("Enter the task number to complete:");
                         int completeTaskNumber = scanner.nextInt();
                         scanner.nextLine();
-                        todoList.completeTask(completeTaskNumber);
+                        todoListManager.completeTask(completeTaskNumber);
                         break;
                     case "save":
                         System.out.println("Enter the filename to save tasks:");
                         String saveFilename = scanner.nextLine();
-                        todoList.saveTasksToFile(saveFilename);
+                        todoListManager.saveTasksToFile(saveFilename);
                         break;
                     case "load":
                         System.out.println("Enter the filename to load tasks:");
                         String loadFilename = scanner.nextLine();
-                        todoList.loadTasksFromFile(loadFilename);
+                        todoListManager.loadTasksFromFile(loadFilename);
                         break;
                     case "exit":
                         System.out.println("Exiting the application");
