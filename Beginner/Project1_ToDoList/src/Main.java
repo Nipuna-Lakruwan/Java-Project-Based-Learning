@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Main {
-    public static <Exeption> void main(String[] args) {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         TodoList todoList = new TodoList();
         String command = "";
@@ -40,7 +40,7 @@ public class Main {
                     default:
                         System.out.println("Invalid command");
                 }
-            } catch (Exeption e) {
+            } catch (Exception e) {
                 System.out.println("An error occurred: " + e.getMessage());
                 scanner.nextLine();
             }
