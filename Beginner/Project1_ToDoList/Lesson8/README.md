@@ -1,7 +1,3 @@
-Let's move to **Lesson 8: Java Maps - Associating Keys with Values**. Here's the **README.md** for Lesson 8.
-
----
-
 ### Lesson 8: Java Maps - Associating Keys with Values
 
 In this lesson, you’ll learn how to use the `Map` interface in Java. Maps store key-value pairs, making them ideal for situations where you need to look up values based on a unique key.
