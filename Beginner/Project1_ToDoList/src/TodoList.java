@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -34,6 +35,29 @@ public class TodoList {
             tasks.remove(index - 1); // Remove the task after completion
         } else {
             System.out.println("Invalid task number.");
+        }
+    }
+
+    public void saveTasksToFile(String filename) {
+        try (FileWriter writer = new FileWriter(filename)) {
+            for (String task : tasks) {
+                writer.write(task + "\n");
+            }
+            System.out.println("Tasks saved to " + filename);
+        } catch (IOException e) {
+            System.out.println("Error saving tasks: " + e.getMessage());
+        }
+    }
+
+    public void loadTasksFromFile(String filename) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String task;
+            while ((task = reader.readLine()) != null) {
+                tasks.add(task);
+            }
+            System.out.println("Tasks loaded from " + filename);
+        } catch (IOException e) {
+            System.out.println("Error loading tasks: " + e.getMessage());
         }
     }
 }

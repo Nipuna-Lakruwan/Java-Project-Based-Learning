@@ -10,7 +10,7 @@ public class Main {
 
         do {
             try {
-                System.out.println("\nEnter a command (add/view/remove/complete/exit):");
+                System.out.println("\nEnter a command (add/view/remove/complete/save/load/exit):");
                 command = scanner.nextLine();
 
                 switch (command) {
@@ -33,6 +33,16 @@ public class Main {
                         int completeTaskNumber = scanner.nextInt();
                         scanner.nextLine();
                         todoList.completeTask(completeTaskNumber);
+                        break;
+                    case "save":
+                        System.out.println("Enter the filename to save tasks:");
+                        String saveFilename = scanner.nextLine();
+                        todoList.saveTasksToFile(saveFilename);
+                        break;
+                    case "load":
+                        System.out.println("Enter the filename to load tasks:");
+                        String loadFilename = scanner.nextLine();
+                        todoList.loadTasksFromFile(loadFilename);
                         break;
                     case "exit":
                         System.out.println("Exiting the application");
