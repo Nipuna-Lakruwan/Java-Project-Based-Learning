@@ -1,10 +1,3 @@
-// HelloWorld.java
-public class HelloWorld {
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
-}
-
 // DataTypesExample.java
 public class DataTypesExample {
     public static void main(String[] args) {
@@ -15,7 +8,7 @@ public class DataTypesExample {
         // Displaying values
         System.out.println("Age: " + age);
         System.out.println("Name: " + NAME);
-        
+
         // Example of primitive data types
         byte byteValue = 100;
         short shortValue = 1000;
@@ -37,17 +30,17 @@ public class DataTypesExample {
 }
 
 /*
-  * Output:
-  * Age: 22
-  * Name: Nipuna
-  * Byte Value: 100
-  * Short Value: 1000
-  * Long Value: 100000
-  * Float Value: 10.5
-  * Double Value: 20.99
-  * Char Value: A
-  * Boolean Value: true
-*/
+ * Output:
+ * Age: 22
+ * Name: Nipuna
+ * Byte Value: 100
+ * Short Value: 1000
+ * Long Value: 100000
+ * Float Value: 10.5
+ * Double Value: 20.99
+ * Char Value: A
+ * Boolean Value: true
+ */
 
 /*
 Summary
